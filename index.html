@@ -1,194 +1,149 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>AZRAN - مصمم العطور الخاص</title>
+<meta charset="UTF-8">
+<title>AZRAN ADMIN</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+<style>
+    body { background:#000; color:#fff; font-family:Arial; padding: 20px; }
+    .gold { color:gold; text-align: center; }
+    .box { border:1px solid #333; padding:15px; margin:10px 0; border-radius: 5px; }
     
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-
-    <style>
-        :root {
-            --gold: #d4af37;
-            --bg: #0a0a0a;
-            --card: #161616;
-            --accent: #222;
-        }
-
-        body {
-            background: var(--bg);
-            color: #fff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .container { max-width: 600px; margin: auto; }
-        .gold { color: var(--gold); text-align: center; letter-spacing: 2px; }
-
-        .perfume-builder {
-            background: var(--card);
-            padding: 20px;
-            border-radius: 15px;
-            border: 1px solid var(--accent);
-        }
-
-        .note-section {
-            margin-bottom: 20px;
-            padding: 15px;
-            border-right: 3px solid var(--gold);
-            background: #1d1d1d;
-            border-radius: 0 10px 10px 0;
-        }
-
-        label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--gold); }
-
-        select, input, textarea {
-            width: 100%;
-            padding: 12px;
-            background: #000;
-            color: #fff;
-            border: 1px solid #333;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            font-size: 1rem;
-        }
-
-        .btn-order {
-            background: var(--gold);
-            color: #000;
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .btn-order:hover { background: #b8962d; transform: scale(0.98); }
-
-        .orders-grid { margin-top: 40px; display: grid; gap: 15px; }
-        .order-card { background: #1a1a1a; padding: 15px; border-radius: 10px; border-left: 4px solid var(--gold); }
-    </style>
+    /* تنسيق القوائم المنسدلة (المكتبة) */
+    select, input, textarea { 
+        width: 100%; 
+        padding: 10px; 
+        margin: 5px 0 15px 0; 
+        background: #111; 
+        color: #fff; 
+        border: 1px solid #444; 
+    }
+    
+    label { color: gold; font-size: 0.9rem; font-weight: bold; }
+    
+    .order-btn { 
+        background: gold; 
+        color: black; 
+        padding: 10px; 
+        border: none; 
+        width: 100%; 
+        font-weight: bold; 
+        cursor: pointer; 
+    }
+    
+    .divider { border-top: 1px solid #333; margin: 15px 0; }
+</style>
 </head>
+
 <body>
 
-<div class="container">
-    <h1 class="gold">AZRAN PERFUME BUILDER</h1>
+<h1 class="gold">AZRAN ADMIN</h1>
+
+<div class="box">
+    <h3 class="gold">تصميم عطرك الخاص</h3>
     
-    <div class="perfume-builder">
-        <div class="note-section">
-            <label>✨ القمة (Top Notes) - أول انطباع</label>
-            <select id="topNote">
-                <option value="">اختر من المكتبة...</option>
-                <option>برغموت إيطالي</option>
-                <option>خزامى (لافندر)</option>
-                <option>ماندرين (يوسفي)</option>
-                <option>ليمون صقلي</option>
-                <option>فلفل وردي</option>
-            </select>
-        </div>
+    <label>الاسم:</label>
+    <input type="text" id="name" placeholder="أدخل اسمك">
 
-        <div class="note-section">
-            <label>❤️ القلب (Heart Notes) - روح العطر</label>
-            <select id="heartNote">
-                <option value="">اختر من المكتبة...</option>
-                <option>ياسمين سامباك</option>
-                <option>ورد طائفي</option>
-                <option>إبرة الراعي (جيرانيوم)</option>
-                <option>هيل هندي</option>
-                <option>زعفران</option>
-            </select>
-        </div>
+    <label>الهاتف:</label>
+    <input type="tel" id="phone" placeholder="أدخل رقمك">
 
-        <div class="note-section">
-            <label>🪵 القاعدة (Base Notes) - الثبات والعمق</label>
-            <select id="baseNote">
-                <option value="">اختر من المكتبة...</option>
-                <option>عود كمبودي</option>
-                <option>مسك غزال</option>
-                <option>عنبر رمادي</option>
-                <option>خشب الصندل</option>
-                <option>فانيليا مدغشقر</option>
-                <option>باتشولي</option>
-            </select>
-        </div>
+    <label>إفتتاحية العطر (Top Notes):</label>
+    <select id="top">
+        <option value="غير محدد">-- اختر من المكتبة --</option>
+        <option>برغموت</option>
+        <option>خزامى</option>
+        <option>هيل</option>
+        <option>فلفل وردي</option>
+    </select>
 
-        <hr style="border-color: #333; margin: 20px 0;">
-        
-        <input type="text" id="custName" placeholder="اسمك الكامل">
-        <input type="tel" id="custPhone" placeholder="رقم الهاتف">
-        <textarea id="custNotes" placeholder="أي ملاحظات إضافية بخصوص التركيز أو التغليف..."></textarea>
-        
-        <button class="btn-order" onclick="sendOrder()">إرسال طلب التصميم</button>
-    </div>
+    <label>قلب العطر (Heart Notes):</label>
+    <select id="heart">
+        <option value="غير محدد">-- اختر من المكتبة --</option>
+        <option>ياسمين</option>
+        <option>ورد طائفي</option>
+        <option>زعفران</option>
+        <option>قرفة</option>
+    </select>
 
-    <h2 class="gold" style="margin-top: 50px;">لوحة إشراف الطلبات</h2>
-    <div id="adminOrders" class="orders-grid"></div>
+    <label>قاعدة العطر (Base Notes):</label>
+    <select id="base">
+        <option value="غير محدد">-- اختر من المكتبة --</option>
+        <option>عود</option>
+        <option>مسك</option>
+        <option>عنبر</option>
+        <option>فانيليا</option>
+        <option>خشب الصندل</option>
+    </select>
+
+    <label>ملاحظات إضافية:</label>
+    <textarea id="notes" rows="2"></textarea>
+
+    <button class="order-btn" onclick="send()">إرسال الطلب</button>
 </div>
 
+<div class="divider"></div>
+<h2 class="gold">قائمة الطلبات الواردة</h2>
+
+<div id="orders"></div>
+
 <script>
-    const firebaseConfig = {
-        apiKey: "YOUR_KEY",
-        authDomain: "YOUR_DOMAIN",
-        projectId: "YOUR_ID",
-    };
+const firebaseConfig = {
+    apiKey: "YOUR_KEY",
+    authDomain: "YOUR_DOMAIN",
+    projectId: "YOUR_ID",
+};
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
-    // دالة إرسال الطلب (للزبون)
-    function sendOrder() {
-        const orderData = {
-            name: document.getElementById('custName').value,
-            phone: document.getElementById('custPhone').value,
-            top: document.getElementById('topNote').value,
-            heart: document.getElementById('heartNote').value,
-            base: document.getElementById('baseNote').value,
-            notes: document.getElementById('custNotes').value,
-            time: firebase.firestore.FieldValue.serverTimestamp()
-        };
+// وظيفة إرسال الطلب
+function send() {
+    const name = document.getElementById("name").value;
+    const phone = document.getElementById("phone").value;
+    const top = document.getElementById("top").value;
+    const heart = document.getElementById("heart").value;
+    const base = document.getElementById("base").value;
+    const notes = document.getElementById("notes").value;
 
-        if(!orderData.name || !orderData.top) return alert("يرجى إكمال البيانات الأساسية");
+    if(!name || !phone) return alert("الرجاء كتابة الاسم والهاتف");
 
-        db.collection("orders").add(orderData).then(() => {
-            alert("تم استلام تصميمك بنجاح! سنتواصل معك قريباً.");
-            location.reload();
+    db.collection("orders").add({
+        name: name,
+        phone: phone,
+        product: `القمة: ${top} | القلب: ${heart} | القاعدة: ${base}`,
+        notes: notes,
+        time: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+        alert("تم الإرسال!");
+        location.reload();
+    });
+}
+
+// وظيفة عرض الطلبات (نفس طريقتك الأصلية)
+function load(){
+    db.collection("orders").orderBy("time","desc")
+    .onSnapshot(snap=>{
+        document.getElementById("orders").innerHTML="";
+        snap.forEach(doc=>{
+            let d=doc.data();
+            document.getElementById("orders").innerHTML+=`
+            <div class="box">
+                <p><b class="gold">Name:</b> ${d.name}</p>
+                <p><b class="gold">Phone:</b> ${d.phone}</p>
+                <p><b class="gold">Composition:</b> ${d.product}</p>
+                <p><b class="gold">Notes:</b> ${d.notes}</p>
+                <button onclick="db.collection('orders').doc('${doc.id}').delete()" style="background:none; color:red; border:none; cursor:pointer;">[حذف]</button>
+            </div>
+            `;
         });
-    }
+    });
+}
 
-    // دالة عرض الطلبات (للمدير)
-    function loadAdmin() {
-        db.collection("orders").orderBy("time", "desc").onSnapshot(snap => {
-            const list = document.getElementById("adminOrders");
-            list.innerHTML = "";
-            snap.forEach(doc => {
-                const d = doc.data();
-                list.innerHTML += `
-                    <div class="order-card">
-                        <small style="color: #888;">ID: ${doc.id}</small>
-                        <p>👤 <b>العميل:</b> ${d.name}</p>
-                        <p>📞 <b>الهاتف:</b> ${d.phone}</p>
-                        <div style="background: #000; padding: 10px; border-radius: 5px; margin: 10px 0;">
-                            <p><b>✨ القمة:</b> ${d.top}</p>
-                            <p><b>❤️ القلب:</b> ${d.heart}</p>
-                            <p><b>🪵 القاعدة:</b> ${d.base}</p>
-                        </div>
-                        <p>📝 <b>ملاحظات:</b> ${d.notes || 'لا يوجد'}</p>
-                        <button onclick="deleteOrder('${doc.id}')" style="color:red; background:none; border:none; cursor:pointer;">× حذف الطلب</button>
-                    </div>
-                `;
-            });
-        });
-    }
-
-    function deleteOrder(id) {
-        if(confirm("مسح الطلب؟")) db.collection("orders").doc(id).delete();
-    }
-
-    loadAdmin();
+load();
 </script>
 
 </body>
