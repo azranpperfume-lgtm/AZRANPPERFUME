@@ -2,149 +2,209 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>AZRAN ADMIN</title>
-
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AZRAN | Luxury Perfume House</title>
 
 <style>
-    body { background:#000; color:#fff; font-family:Arial; padding: 20px; }
-    .gold { color:gold; text-align: center; }
-    .box { border:1px solid #333; padding:15px; margin:10px 0; border-radius: 5px; }
-    
-    /* تنسيق القوائم المنسدلة (المكتبة) */
-    select, input, textarea { 
-        width: 100%; 
-        padding: 10px; 
-        margin: 5px 0 15px 0; 
-        background: #111; 
-        color: #fff; 
-        border: 1px solid #444; 
-    }
-    
-    label { color: gold; font-size: 0.9rem; font-weight: bold; }
-    
-    .order-btn { 
-        background: gold; 
-        color: black; 
-        padding: 10px; 
-        border: none; 
-        width: 100%; 
-        font-weight: bold; 
-        cursor: pointer; 
-    }
-    
-    .divider { border-top: 1px solid #333; margin: 15px 0; }
+body{
+margin:0;
+font-family:Arial;
+background:#000;
+color:#fff;
+}
+
+section{
+padding:70px 20px;
+border-bottom:1px solid #222;
+text-align:center;
+}
+
+h2{
+color:#d4af37;
+margin-bottom:20px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+max-width:1000px;
+margin:auto;
+}
+
+.card{
+background:#111;
+padding:15px;
+border:1px solid #222;
+border-radius:12px;
+transition:0.3s;
+}
+
+.card:hover{
+transform:scale(1.03);
+border-color:#d4af37;
+}
+
+.card img{
+width:100%;
+border-radius:10px;
+height:180px;
+object-fit:cover;
+}
+
+.small{
+color:#aaa;
+font-size:13px;
+}
+
+input,select{
+width:100%;
+padding:10px;
+margin:8px 0;
+background:#111;
+border:1px solid #333;
+color:#fff;
+border-radius:6px;
+}
+
+button{
+padding:12px 20px;
+border:1px solid #d4af37;
+background:transparent;
+color:#d4af37;
+cursor:pointer;
+margin-top:10px;
+}
+
+button:hover{
+background:#d4af37;
+color:#000;
+}
 </style>
 </head>
 
 <body>
 
-<h1 class="gold">AZRAN ADMIN</h1>
+<!-- 1. ABOUT -->
+<section>
+<h2>AZRAN EXPERIENCE</h2>
+<p>
+AZRAN is a luxury perfume house that creates personalized fragrances that reflect identity, emotion, and presence.
+</p>
+</section>
 
-<div class="box">
-    <h3 class="gold">تصميم عطرك الخاص</h3>
-    
-    <label>الاسم:</label>
-    <input type="text" id="name" placeholder="أدخل اسمك">
+<!-- 2. SIGNATURE PERFUMES -->
+<section>
+<h2>AZRAN SIGNATURE COLLECTION</h2>
 
-    <label>الهاتف:</label>
-    <input type="tel" id="phone" placeholder="أدخل رقمك">
+<div class="grid">
 
-    <label>إفتتاحية العطر (Top Notes):</label>
-    <select id="top">
-        <option value="غير محدد">-- اختر من المكتبة --</option>
-        <option>برغموت</option>
-        <option>خزامى</option>
-        <option>هيل</option>
-        <option>فلفل وردي</option>
-    </select>
-
-    <label>قلب العطر (Heart Notes):</label>
-    <select id="heart">
-        <option value="غير محدد">-- اختر من المكتبة --</option>
-        <option>ياسمين</option>
-        <option>ورد طائفي</option>
-        <option>زعفران</option>
-        <option>قرفة</option>
-    </select>
-
-    <label>قاعدة العطر (Base Notes):</label>
-    <select id="base">
-        <option value="غير محدد">-- اختر من المكتبة --</option>
-        <option>عود</option>
-        <option>مسك</option>
-        <option>عنبر</option>
-        <option>فانيليا</option>
-        <option>خشب الصندل</option>
-    </select>
-
-    <label>ملاحظات إضافية:</label>
-    <textarea id="notes" rows="2"></textarea>
-
-    <button class="order-btn" onclick="send()">إرسال الطلب</button>
+<div class="card">
+<img src="https://images.unsplash.com/photo-1594035910387-fea47794261f">
+<h3>Midnight Oud</h3>
+<p class="small">Notes: Oud, Amber, Smoke</p>
+<p>Dark luxury scent inspired by night elegance.</p>
 </div>
 
-<div class="divider"></div>
-<h2 class="gold">قائمة الطلبات الواردة</h2>
+<div class="card">
+<img src="https://images.unsplash.com/photo-1615634260167-c8cdede054de">
+<h3>Royal Musk</h3>
+<p class="small">Notes: Musk, Vanilla, Sandalwood</p>
+<p>Soft yet powerful royal identity fragrance.</p>
+</div>
 
-<div id="orders"></div>
+<div class="card">
+<img src="https://images.unsplash.com/photo-1615485290382-441e4d049c5f">
+<h3>Velvet Rose</h3>
+<p class="small">Notes: Rose, Jasmine, Amber</p>
+<p>Elegant floral signature of softness and luxury.</p>
+</div>
 
-<script>
-const firebaseConfig = {
-    apiKey: "YOUR_KEY",
-    authDomain: "YOUR_DOMAIN",
-    projectId: "YOUR_ID",
-};
+<div class="card">
+<img src="https://images.unsplash.com/photo-1615397349754-cfa2066a2989">
+<h3>Golden Spice</h3>
+<p class="small">Notes: Saffron, Cinnamon, Vanilla</p>
+<p>Warm exotic luxury inspired by gold tones.</p>
+</div>
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+<div class="card">
+<img src="https://images.unsplash.com/photo-1615634260207-4e7d7c2f0a0f">
+<h3>Desert Noir</h3>
+<p class="small">Notes: Leather, Oud, Sandalwood</p>
+<p>Strong masculine desert-inspired identity.</p>
+</div>
 
-// وظيفة إرسال الطلب
-function send() {
-    const name = document.getElementById("name").value;
-    const phone = document.getElementById("phone").value;
-    const top = document.getElementById("top").value;
-    const heart = document.getElementById("heart").value;
-    const base = document.getElementById("base").value;
-    const notes = document.getElementById("notes").value;
+</div>
+</section>
 
-    if(!name || !phone) return alert("الرجاء كتابة الاسم والهاتف");
+<!-- 3. CUSTOM PERFUME FORM -->
+<section>
+<h2>CREATE YOUR OWN PERFUME</h2>
 
-    db.collection("orders").add({
-        name: name,
-        phone: phone,
-        product: `القمة: ${top} | القلب: ${heart} | القاعدة: ${base}`,
-        notes: notes,
-        time: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(() => {
-        alert("تم الإرسال!");
-        location.reload();
-    });
-}
+<div style="max-width:500px;margin:auto;text-align:left">
 
-// وظيفة عرض الطلبات (نفس طريقتك الأصلية)
-function load(){
-    db.collection("orders").orderBy("time","desc")
-    .onSnapshot(snap=>{
-        document.getElementById("orders").innerHTML="";
-        snap.forEach(doc=>{
-            let d=doc.data();
-            document.getElementById("orders").innerHTML+=`
-            <div class="box">
-                <p><b class="gold">Name:</b> ${d.name}</p>
-                <p><b class="gold">Phone:</b> ${d.phone}</p>
-                <p><b class="gold">Composition:</b> ${d.product}</p>
-                <p><b class="gold">Notes:</b> ${d.notes}</p>
-                <button onclick="db.collection('orders').doc('${doc.id}').delete()" style="background:none; color:red; border:none; cursor:pointer;">[حذف]</button>
-            </div>
-            `;
-        });
-    });
-}
+<input placeholder="First Name">
+<input placeholder="Last Name">
+<input placeholder="Phone Number">
+<input placeholder="Address">
 
-load();
-</script>
+<select>
+<option>Select Continent</option>
+<option>Europe</option>
+<option>Asia</option>
+<option>Africa</option>
+<option>America</option>
+</select>
+
+<select>
+<option>Choose Size</option>
+<option>30 ML</option>
+<option>100 ML</option>
+</select>
+
+<button>Submit Request</button>
+
+</div>
+</section>
+
+<!-- 4. WORLD PERFUMES -->
+<section>
+<h2>WORLD LUXURY COLLECTION</h2>
+
+<div class="grid">
+
+<div class="card">
+<h3>Inspired No.1</h3>
+<p class="small">Notes: Bergamot, Musk, Amber</p>
+<p>Aspiration from AZRAN of global elegance.</p>
+</div>
+
+<div class="card">
+<h3>Inspired No.2</h3>
+<p class="small">Notes: Oud, Rose, Vanilla</p>
+<p>Aspiration from AZRAN of deep luxury identity.</p>
+</div>
+
+<div class="card">
+<h3>Inspired No.3</h3>
+<p class="small">Notes: Citrus, Sandalwood, Spice</p>
+<p>Aspiration from AZRAN of modern freshness.</p>
+</div>
+
+<div class="card">
+<h3>Inspired No.4</h3>
+<p class="small">Notes: Leather, Amber, Smoke</p>
+<p>Aspiration from AZRAN of dark elegance.</p>
+</div>
+
+<div class="card">
+<h3>Inspired No.5</h3>
+<p class="small">Notes: Floral, Musk, Wood</p>
+<p>Aspiration from AZRAN of soft luxury essence.</p>
+</div>
+
+</div>
+</section>
 
 </body>
 </html>
