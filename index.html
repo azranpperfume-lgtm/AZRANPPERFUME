@@ -1,307 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AZRAN | Luxury Perfume Store</title>
+    <title>AZRAN ADMIN</title>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
-
-<style>
-:root{
---gold:#d4af37;
---bg:#000;
---card:#111;
---text:#aaa;
-}
-
-body{
-margin:0;
-font-family:'Poppins',sans-serif;
-background:radial-gradient(circle,#111,#000);
-color:white;
-}
-
-/* HEADER */
-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:15px 20px;
-background:#000;
-border-bottom:1px solid #222;
-position:sticky;
-top:0;
-z-index:100;
-}
-
-.logo{
-font-family:'Cinzel';
-color:var(--gold);
-font-size:20px;
-}
-
-button{
-cursor:pointer;
-}
-
-/* NAV BUTTONS */
-.nav button{
-background:none;
-border:none;
-color:white;
-margin-left:10px;
-font-size:14px;
-}
-
-/* SECTION */
-.section{
-padding:40px 20px;
-text-align:center;
-}
-
-/* GRID */
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-gap:15px;
-max-width:900px;
-margin:auto;
-}
-
-.card{
-background:var(--card);
-padding:15px;
-border:1px solid #222;
-border-radius:10px;
-cursor:pointer;
-transition:.3s;
-}
-
-.card:hover{
-border-color:var(--gold);
-transform:translateY(-5px);
-}
-
-.card.selected{
-border-color:var(--gold);
-background:rgba(212,175,55,0.1);
-}
-
-/* BUTTON */
-.btn{
-border:1px solid var(--gold);
-color:var(--gold);
-background:transparent;
-padding:10px 20px;
-cursor:pointer;
-transition:.3s;
-margin-top:15px;
-}
-
-.btn:hover{
-background:var(--gold);
-color:#000;
-}
-
-/* CART */
-.cart{
-position:fixed;
-right:0;
-top:0;
-width:320px;
-height:100%;
-background:#111;
-padding:20px;
-overflow:auto;
-display:none;
-z-index:999;
-}
-
-.cart h3{
-color:var(--gold);
-}
-
-hr{
-border:1px solid #222;
-margin:15px 0;
-}
-
-input,select{
-width:100%;
-padding:10px;
-margin:8px 0;
-background:#000;
-border:1px solid #333;
-color:white;
-border-radius:5px;
-}
-</style>
+    <style>
+        body { background: #000; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; }
+        .box { border: 1px solid #333; padding: 15px; margin-bottom: 15px; border-radius: 8px; background: #111; transition: 0.3s; }
+        .box:hover { border-color: gold; }
+        .gold { color: gold; text-transform: uppercase; letter-spacing: 2px; }
+        b { color: #aaa; margin-right: 5px; }
+        .val { color: #fff; }
+    </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
-<header>
-<div class="logo">AZRAN</div>
-
-<div class="nav">
-<button onclick="show('home')">Home</button>
-<button onclick="show('shop')">Shop</button>
-<button onclick="show('custom')">Custom</button>
-<button onclick="toggleCart()">Cart (<span id="count">0</span>)</button>
-</div>
-</header>
-
-<!-- HOME -->
-<div id="home" class="section">
-<h1 style="color:#d4af37;font-family:Cinzel;">Wear Your Identity</h1>
-<p style="color:#aaa;">Luxury personalized perfumes crafted for you</p>
-</div>
-
-<!-- SHOP -->
-<div id="shop" class="section" style="display:none;">
-<h2 style="color:#d4af37;">Signature Collection</h2>
-
-<div class="grid">
-<div class="card" onclick="addCart('Midnight Oud')">Midnight Oud</div>
-<div class="card" onclick="addCart('Royal Musk')">Royal Musk</div>
-<div class="card" onclick="addCart('Velvet Amber')">Velvet Amber</div>
-<div class="card" onclick="addCart('Dark Rose')">Dark Rose</div>
-</div>
-</div>
-
-<!-- CUSTOM -->
-<div id="custom" class="section" style="display:none;">
-<h2 style="color:#d4af37;">Create Your Perfume</h2>
-
-<input id="name" placeholder="Full Name">
-<input id="phone" placeholder="Phone Number">
-<input id="pname" placeholder="Perfume Name">
-
-<select id="size">
-<option>30ml</option>
-<option>50ml</option>
-<option>100ml</option>
-</select>
-
-<h3 style="color:#d4af37;">Select Notes</h3>
-
-<div class="grid" id="notes"></div>
-
-<button class="btn" onclick="addCustom()">Add Custom Perfume</button>
-</div>
-
-<!-- CART -->
-<div class="cart" id="cart">
-<h3>Your Cart</h3>
-
-<div id="items"></div>
-
-<hr>
-
-<button class="btn" onclick="checkout()" style="width:100%;">
-Checkout via WhatsApp
-</button>
-</div>
+<h1 class="gold">AZRAN ADMIN</h1>
+<div id="orders">Loading orders...</div>
 
 <script>
+    // Replace these with your actual Firebase project credentials
+    const firebaseConfig = {
+        apiKey: "YOUR_KEY",
+        authDomain: "YOUR_DOMAIN",
+        projectId: "YOUR_ID",
+    };
 
-/* YOUR WHATSAPP NUMBER */
-const WHATSAPP_NUMBER = "213562103308";
+    // Initialize Firebase using the compat method
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-/* CART */
-let cart=[];
+    function load() {
+        // Listening to the 'orders' collection
+        db.collection("orders").orderBy("time", "desc")
+        .onSnapshot(snap => {
+            const container = document.getElementById("orders");
+            container.innerHTML = ""; // Clear current view
 
-function addCart(item){
-cart.push(item);
-update();
-}
+            if (snap.empty) {
+                container.innerHTML = "<p>No orders found.</p>";
+                return;
+            }
 
-/* NAV */
-function show(id){
-document.getElementById("home").style.display="none";
-document.getElementById("shop").style.display="none";
-document.getElementById("custom").style.display="none";
+            snap.forEach(doc => {
+                let d = doc.data();
+                // Building the HTML string
+                container.innerHTML += `
+                    <div class="box">
+                        <p><b>Name:</b> <span class="val">${d.name || 'N/A'}</span></p>
+                        <p><b>Phone:</b> <span class="val">${d.phone || 'N/A'}</span></p>
+                        <p><b>Product:</b> <span class="val">${d.product || 'N/A'}</span></p>
+                        <p><b>Notes:</b> <span class="val">${d.notes || 'None'}</span></p>
+                    </div>
+                `;
+            });
+        }, err => {
+            console.error("Error fetching orders: ", err);
+            document.getElementById("orders").innerHTML = "Error loading data. Check console.";
+        });
+    }
 
-document.getElementById(id).style.display="block";
-}
-
-/* CART UI */
-function update(){
-document.getElementById("count").innerText=cart.length;
-
-let box=document.getElementById("items");
-box.innerHTML="";
-
-cart.forEach(c=>{
-let div=document.createElement("div");
-div.innerText=c;
-box.appendChild(div);
-});
-}
-
-function toggleCart(){
-let c=document.getElementById("cart");
-c.style.display = (c.style.display==="block")?"none":"block";
-}
-
-/* NOTES */
-const notes=["Bergamot","Rose","Oud","Musk","Vanilla","Amber","Jasmine"];
-
-let n=document.getElementById("notes");
-
-notes.forEach(x=>{
-let d=document.createElement("div");
-d.className="card";
-d.innerText=x;
-
-d.onclick=function(){
-this.classList.toggle("selected");
-}
-
-n.appendChild(d);
-});
-
-/* CUSTOM PERFUME */
-function addCustom(){
-
-let selected=[...document.querySelectorAll("#notes .selected")]
-.map(e=>e.innerText)
-.join(", ");
-
-let name=document.getElementById("name").value;
-let phone=document.getElementById("phone").value;
-let pname=document.getElementById("pname").value;
-let size=document.getElementById("size").value;
-
-let customOrder=
-`Custom Perfume:
-Name: ${pname}
-Size: ${size}
-Notes: ${selected}`;
-
-cart.push(customOrder);
-
-update();
-}
-
-/* CHECKOUT → WHATSAPP */
-function checkout(){
-
-let msg="🖤 AZRAN ORDER\n\n";
-
-cart.forEach(c=>{
-msg+=c+"\n\n";
-});
-
-msg+=`\nSend from AZRAN Website`;
-
-let url=`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
-
-window.open(url,"_blank");
-}
-
+    load();
 </script>
 
 </body>
