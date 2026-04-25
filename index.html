@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>AZRAN ADMIN | لوحة التحكم</title>
+    <title>AZRAN - مصمم العطور الخاص</title>
     
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -11,101 +11,125 @@
         :root {
             --gold: #d4af37;
             --bg: #0a0a0a;
-            --box-bg: #1a1a1a;
-            --text: #ffffff;
-            --border: #333;
+            --card: #161616;
+            --accent: #222;
         }
 
         body {
             background: var(--bg);
-            color: var(--text);
+            color: #fff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 20px;
         }
 
-        .header {
-            text-align: center;
-            border-bottom: 2px solid var(--gold);
-            margin-bottom: 30px;
-            padding-bottom: 10px;
-        }
+        .container { max-width: 600px; margin: auto; }
+        .gold { color: var(--gold); text-align: center; letter-spacing: 2px; }
 
-        .gold { color: var(--gold); text-transform: uppercase; letter-spacing: 3px; }
-
-        .orders-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .box {
-            background: var(--box-bg);
-            border: 1px solid var(--border);
+        .perfume-builder {
+            background: var(--card);
             padding: 20px;
-            border-radius: 12px;
-            position: relative;
-            transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            border-radius: 15px;
+            border: 1px solid var(--accent);
         }
 
-        .box:hover {
-            border-color: var(--gold);
-            transform: translateY(-5px);
+        .note-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-right: 3px solid var(--gold);
+            background: #1d1d1d;
+            border-radius: 0 10px 10px 0;
         }
 
-        .box p { margin: 8px 0; font-size: 0.95rem; }
-        .box b { color: var(--gold); margin-left: 5px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--gold); }
 
-        .time-tag {
-            font-size: 0.75rem;
-            color: #888;
-            display: block;
+        select, input, textarea {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            color: #fff;
+            border: 1px solid #333;
+            border-radius: 8px;
             margin-bottom: 10px;
+            font-size: 1rem;
         }
 
-        .delete-btn {
-            background: #ff4444;
-            color: white;
-            border: none;
-            padding: 5px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            float: left;
-            font-size: 0.8rem;
-        }
-
-        .delete-btn:hover { background: #cc0000; }
-
-        .status-badge {
-            background: #2ecc71;
+        .btn-order {
+            background: var(--gold);
             color: #000;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
             font-weight: bold;
-            float: right;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.3s;
         }
 
-        /* Responsive */
-        @media (max-width: 600px) {
-            .orders-grid { grid-template-columns: 1fr; }
-        }
+        .btn-order:hover { background: #b8962d; transform: scale(0.98); }
+
+        .orders-grid { margin-top: 40px; display: grid; gap: 15px; }
+        .order-card { background: #1a1a1a; padding: 15px; border-radius: 10px; border-left: 4px solid var(--gold); }
     </style>
 </head>
-
 <body>
 
-<div class="header">
-    <h1 class="gold">AZRAN ADMIN</h1>
-    <p>إدارة الطلبات المباشرة</p>
-</div>
+<div class="container">
+    <h1 class="gold">AZRAN PERFUME BUILDER</h1>
+    
+    <div class="perfume-builder">
+        <div class="note-section">
+            <label>✨ القمة (Top Notes) - أول انطباع</label>
+            <select id="topNote">
+                <option value="">اختر من المكتبة...</option>
+                <option>برغموت إيطالي</option>
+                <option>خزامى (لافندر)</option>
+                <option>ماندرين (يوسفي)</option>
+                <option>ليمون صقلي</option>
+                <option>فلفل وردي</option>
+            </select>
+        </div>
 
-<div id="orders" class="orders-grid">
+        <div class="note-section">
+            <label>❤️ القلب (Heart Notes) - روح العطر</label>
+            <select id="heartNote">
+                <option value="">اختر من المكتبة...</option>
+                <option>ياسمين سامباك</option>
+                <option>ورد طائفي</option>
+                <option>إبرة الراعي (جيرانيوم)</option>
+                <option>هيل هندي</option>
+                <option>زعفران</option>
+            </select>
+        </div>
+
+        <div class="note-section">
+            <label>🪵 القاعدة (Base Notes) - الثبات والعمق</label>
+            <select id="baseNote">
+                <option value="">اختر من المكتبة...</option>
+                <option>عود كمبودي</option>
+                <option>مسك غزال</option>
+                <option>عنبر رمادي</option>
+                <option>خشب الصندل</option>
+                <option>فانيليا مدغشقر</option>
+                <option>باتشولي</option>
+            </select>
+        </div>
+
+        <hr style="border-color: #333; margin: 20px 0;">
+        
+        <input type="text" id="custName" placeholder="اسمك الكامل">
+        <input type="tel" id="custPhone" placeholder="رقم الهاتف">
+        <textarea id="custNotes" placeholder="أي ملاحظات إضافية بخصوص التركيز أو التغليف..."></textarea>
+        
+        <button class="btn-order" onclick="sendOrder()">إرسال طلب التصميم</button>
     </div>
 
+    <h2 class="gold" style="margin-top: 50px;">لوحة إشراف الطلبات</h2>
+    <div id="adminOrders" class="orders-grid"></div>
+</div>
+
 <script>
-    // إعدادات Firebase الخاصة بك
     const firebaseConfig = {
         apiKey: "YOUR_KEY",
         authDomain: "YOUR_DOMAIN",
@@ -115,40 +139,56 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    function deleteOrder(id) {
-        if(confirm("هل أنت متأكد من حذف هذا الطلب؟")) {
-            db.collection("orders").doc(id).delete();
-        }
+    // دالة إرسال الطلب (للزبون)
+    function sendOrder() {
+        const orderData = {
+            name: document.getElementById('custName').value,
+            phone: document.getElementById('custPhone').value,
+            top: document.getElementById('topNote').value,
+            heart: document.getElementById('heartNote').value,
+            base: document.getElementById('baseNote').value,
+            notes: document.getElementById('custNotes').value,
+            time: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        if(!orderData.name || !orderData.top) return alert("يرجى إكمال البيانات الأساسية");
+
+        db.collection("orders").add(orderData).then(() => {
+            alert("تم استلام تصميمك بنجاح! سنتواصل معك قريباً.");
+            location.reload();
+        });
     }
 
-    function load() {
-        db.collection("orders").orderBy("time", "desc")
-        .onSnapshot(snap => {
-            const container = document.getElementById("orders");
-            container.innerHTML = "";
-
+    // دالة عرض الطلبات (للمدير)
+    function loadAdmin() {
+        db.collection("orders").orderBy("time", "desc").onSnapshot(snap => {
+            const list = document.getElementById("adminOrders");
+            list.innerHTML = "";
             snap.forEach(doc => {
-                let d = doc.data();
-                let date = d.time ? new Date(d.time.seconds * 1000).toLocaleString('ar-EG') : 'وقت غير معروف';
-
-                container.innerHTML += `
-                    <div class="box">
-                        <span class="status-badge">جديد</span>
-                        <span class="time-tag">${date}</span>
-                        <p><b>الاسم:</b> ${d.name || '---'}</p>
-                        <p><b>الهاتف:</b> <a href="tel:${d.phone}" style="color:lightblue; text-decoration:none;">${d.phone || '---'}</a></p>
-                        <p><b>المنتج:</b> ${d.product || '---'}</p>
-                        <p><b>ملاحظات:</b> ${d.notes || 'لا يوجد'}</p>
-                        <hr style="border:0; border-top:1px solid #333; margin:15px 0;">
-                        <button class="delete-btn" onclick="deleteOrder('${doc.id}')">حذف الطلب</button>
-                        <div style="clear:both;"></div>
+                const d = doc.data();
+                list.innerHTML += `
+                    <div class="order-card">
+                        <small style="color: #888;">ID: ${doc.id}</small>
+                        <p>👤 <b>العميل:</b> ${d.name}</p>
+                        <p>📞 <b>الهاتف:</b> ${d.phone}</p>
+                        <div style="background: #000; padding: 10px; border-radius: 5px; margin: 10px 0;">
+                            <p><b>✨ القمة:</b> ${d.top}</p>
+                            <p><b>❤️ القلب:</b> ${d.heart}</p>
+                            <p><b>🪵 القاعدة:</b> ${d.base}</p>
+                        </div>
+                        <p>📝 <b>ملاحظات:</b> ${d.notes || 'لا يوجد'}</p>
+                        <button onclick="deleteOrder('${doc.id}')" style="color:red; background:none; border:none; cursor:pointer;">× حذف الطلب</button>
                     </div>
                 `;
             });
         });
     }
 
-    load();
+    function deleteOrder(id) {
+        if(confirm("مسح الطلب؟")) db.collection("orders").doc(id).delete();
+    }
+
+    loadAdmin();
 </script>
 
 </body>
