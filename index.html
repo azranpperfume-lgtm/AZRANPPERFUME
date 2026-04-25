@@ -3,201 +3,259 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AZRAN Luxury Perfume</title>
+<title>AZRAN | Luxury E-Commerce</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
 
 <style>
 :root{
 --gold:#d4af37;
---black:#000;
---grey:#111;
---soft:#999;
+--bg:#000;
+--card:#111;
+--text:#aaa;
 }
 
 body{
 margin:0;
 font-family:'Poppins',sans-serif;
-background:radial-gradient(circle at top,#0a0a0a,#000);
+background:radial-gradient(circle,#111,#000);
 color:white;
 }
 
-/* HERO */
-.hero{
-height:100vh;
+header{
 display:flex;
-align-items:center;
-justify-content:center;
-text-align:center;
+justify-content:space-between;
 padding:20px;
+border-bottom:1px solid #222;
+position:sticky;
+top:0;
+background:#000;
+z-index:10;
 }
 
-.hero h1{
+.logo{
 font-family:'Cinzel';
-font-size:3rem;
 color:var(--gold);
-letter-spacing:3px;
 }
 
-.hero p{
-color:var(--soft);
-max-width:500px;
-margin:20px auto;
+.nav button{
+background:none;
+border:none;
+color:white;
+margin-left:10px;
+cursor:pointer;
+}
+
+.section{
+padding:50px 20px;
+text-align:center;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:15px;
+max-width:900px;
+margin:auto;
+}
+
+.card{
+background:var(--card);
+padding:15px;
+border:1px solid #222;
+cursor:pointer;
+transition:.3s;
+}
+
+.card:hover{
+border-color:var(--gold);
+transform:translateY(-5px);
 }
 
 .btn{
 border:1px solid var(--gold);
 color:var(--gold);
-padding:12px 30px;
 background:transparent;
+padding:10px 20px;
 cursor:pointer;
 transition:.3s;
 }
 
 .btn:hover{
 background:var(--gold);
-color:black;
+color:#000;
 }
 
-/* SECTION */
-.section{
-padding:60px 20px;
-text-align:center;
-}
-
-.section h2{
-font-family:'Cinzel';
-color:var(--gold);
-margin-bottom:20px;
-}
-
-/* CARDS */
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:20px;
-max-width:900px;
-margin:auto;
-}
-
-.card{
+/* CART */
+.cart{
+position:fixed;
+right:0;
+top:0;
+width:300px;
+height:100%;
 background:#111;
 padding:20px;
-border-radius:10px;
-transition:.3s;
+overflow:auto;
+display:none;
 }
 
-.card:hover{
-transform:translateY(-5px);
-}
-
-/* FORM */
-.container{
-max-width:800px;
-margin:50px auto;
-background:rgba(20,20,20,0.8);
-padding:30px;
-border-radius:20px;
-backdrop-filter:blur(10px);
+.cart h3{
+color:var(--gold);
 }
 
 input,select{
 width:100%;
 padding:10px;
-margin-top:10px;
-background:#111;
+margin:8px 0;
+background:#000;
 border:1px solid #333;
 color:white;
 }
-
-.hidden{display:none;}
 </style>
 </head>
 
 <body>
 
-<!-- HERO -->
-<div class="hero">
-<div>
-<h1>Wear Your Identity</h1>
-<p>Luxury personalized perfumes crafted to reflect who you are.</p>
-<button class="btn" onclick="scrollToSection()">Start Experience</button>
+<header>
+<div class="logo">AZRAN</div>
+<div class="nav">
+<button onclick="show('home')">Home</button>
+<button onclick="show('shop')">Shop</button>
+<button onclick="show('custom')">Custom</button>
+<button onclick="toggleCart()">Cart 🛒 (<span id="cartCount">0</span>)</button>
 </div>
+</header>
+
+<!-- HOME -->
+<div id="home" class="section">
+<h1 style="font-family:Cinzel;color:var(--gold)">Wear Your Identity</h1>
+<p style="color:#aaa">Luxury personalized perfume experience</p>
 </div>
 
-<!-- ABOUT -->
-<div class="section">
-<h2>AZRAN Experience</h2>
-<p style="color:#aaa; max-width:600px; margin:auto;">
-This is not just a perfume.  
-It’s your identity, your presence, your story.
-</p>
-</div>
-
-<!-- COLLECTION -->
-<div class="section">
-<h2>Signature Collection</h2>
+<!-- SHOP -->
+<div id="shop" class="section" style="display:none;">
+<h2 style="color:var(--gold)">Signature Collection</h2>
 
 <div class="grid">
-<div class="card">Midnight Oud</div>
-<div class="card">Golden Amber</div>
-<div class="card">Velvet Rose</div>
-<div class="card">Dark Musk</div>
-<div class="card">Royal Spice</div>
+<div class="card" onclick="add('Midnight Oud')">Midnight Oud</div>
+<div class="card" onclick="add('Royal Musk')">Royal Musk</div>
+<div class="card" onclick="add('Velvet Amber')">Velvet Amber</div>
+<div class="card" onclick="add('Dark Rose')">Dark Rose</div>
+</div>
 </div>
 
-</div>
+<!-- CUSTOM -->
+<div id="custom" class="section" style="display:none;">
+<h2 style="color:var(--gold)">Create Your Perfume</h2>
 
-<!-- CREATE -->
-<div class="section">
-<h2>Create Your Perfume</h2>
-<p style="color:#aaa;">
-Choose your vibe, notes, and name your scent.
-</p>
+<input id="name" placeholder="Full Name">
+<input id="phone" placeholder="Phone">
+<input id="pname" placeholder="Perfume Name">
 
-<button class="btn" onclick="showForm()">Start Creating</button>
-</div>
-
-<!-- FORM -->
-<div id="formSection" class="container hidden">
-
-<h2 style="text-align:center;">Your Perfume</h2>
-
-<input placeholder="Your Name">
-<input placeholder="Phone">
-
-<select>
+<select id="size">
 <option>30ml</option>
 <option>50ml</option>
 <option>100ml</option>
 </select>
 
-<input placeholder="Perfume Name">
+<h3>Notes Selection</h3>
 
-<button class="btn" style="margin-top:20px;" onclick="finish()">
-Submit Order
+<div class="grid" id="notes"></div>
+
+<button class="btn" onclick="addCustom()" style="margin-top:20px;">
+Add Custom Perfume
 </button>
-
 </div>
 
-<!-- FOOTER -->
-<div class="section">
-<p style="color:#666;">AZRAN © 2026</p>
+<!-- CART -->
+<div class="cart" id="cart">
+<h3>Your Cart</h3>
+<div id="cartItems"></div>
+
+<hr>
+
+<button class="btn" onclick="checkout()" style="width:100%;">
+Checkout
+</button>
 </div>
 
 <script>
 
-function scrollToSection(){
-window.scrollTo({top:window.innerHeight,behavior:"smooth"});
+let cart=[];
+
+/* NAV */
+function show(id){
+document.getElementById("home").style.display="none";
+document.getElementById("shop").style.display="none";
+document.getElementById("custom").style.display="none";
+
+document.getElementById(id).style.display="block";
 }
 
-function showForm(){
-document.getElementById("formSection").classList.remove("hidden");
-window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+/* CART */
+function add(item){
+cart.push(item);
+updateCart();
 }
 
-function finish(){
-alert("Order sent!");
+function updateCart(){
+document.getElementById("cartCount").innerText=cart.length;
+
+let box=document.getElementById("cartItems");
+box.innerHTML="";
+
+cart.forEach(c=>{
+let div=document.createElement("div");
+div.innerText=c;
+box.appendChild(div);
+});
+}
+
+function toggleCart(){
+let c=document.getElementById("cart");
+c.style.display = c.style.display==="block"?"none":"block";
+}
+
+/* NOTES */
+const notes=["Bergamot","Rose","Oud","Musk","Vanilla","Amber","Jasmine"];
+
+let nbox=document.getElementById("notes");
+
+notes.forEach(n=>{
+let d=document.createElement("div");
+d.className="card";
+d.innerText=n;
+
+d.onclick=function(){
+this.classList.toggle("sel");
+}
+
+nbox.appendChild(d);
+});
+
+/* CUSTOM */
+function addCustom(){
+
+let selected=[...document.querySelectorAll("#notes .sel")]
+.map(e=>e.innerText).join(", ");
+
+cart.push("Custom Perfume: "+selected);
+
+updateCart();
+}
+
+/* CHECKOUT */
+function checkout(){
+
+let msg="AZRAN ORDER:\n\n";
+
+cart.forEach(c=>{
+msg+=c+"\n";
+});
+
+let phone="213562103308";
+
+window.open("https://wa.me/"+phone+"?text="+encodeURIComponent(msg));
 }
 
 </script>
