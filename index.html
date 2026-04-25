@@ -1,64 +1,150 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar" dir="rtl">
 <head>
-    <title>AZRAN ADMIN</title>
+    <meta charset="UTF-8">
+    <title>AZRAN ADMIN | لوحة التحكم</title>
+    
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <style>
-        body { background: #000; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; }
-        .box { border: 1px solid #333; padding: 15px; margin-bottom: 15px; border-radius: 8px; background: #111; transition: 0.3s; }
-        .box:hover { border-color: gold; }
-        .gold { color: gold; text-transform: uppercase; letter-spacing: 2px; }
-        b { color: #aaa; margin-right: 5px; }
-        .val { color: #fff; }
+        :root {
+            --gold: #d4af37;
+            --bg: #0a0a0a;
+            --box-bg: #1a1a1a;
+            --text: #ffffff;
+            --border: #333;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid var(--gold);
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+        }
+
+        .gold { color: var(--gold); text-transform: uppercase; letter-spacing: 3px; }
+
+        .orders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .box {
+            background: var(--box-bg);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 12px;
+            position: relative;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .box:hover {
+            border-color: var(--gold);
+            transform: translateY(-5px);
+        }
+
+        .box p { margin: 8px 0; font-size: 0.95rem; }
+        .box b { color: var(--gold); margin-left: 5px; }
+
+        .time-tag {
+            font-size: 0.75rem;
+            color: #888;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .delete-btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            float: left;
+            font-size: 0.8rem;
+        }
+
+        .delete-btn:hover { background: #cc0000; }
+
+        .status-badge {
+            background: #2ecc71;
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            float: right;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .orders-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 
 <body>
 
-<h1 class="gold">AZRAN ADMIN</h1>
-<div id="orders">Loading orders...</div>
+<div class="header">
+    <h1 class="gold">AZRAN ADMIN</h1>
+    <p>إدارة الطلبات المباشرة</p>
+</div>
+
+<div id="orders" class="orders-grid">
+    </div>
 
 <script>
-    // Replace these with your actual Firebase project credentials
+    // إعدادات Firebase الخاصة بك
     const firebaseConfig = {
         apiKey: "YOUR_KEY",
         authDomain: "YOUR_DOMAIN",
         projectId: "YOUR_ID",
     };
 
-    // Initialize Firebase using the compat method
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
+    function deleteOrder(id) {
+        if(confirm("هل أنت متأكد من حذف هذا الطلب؟")) {
+            db.collection("orders").doc(id).delete();
+        }
+    }
+
     function load() {
-        // Listening to the 'orders' collection
         db.collection("orders").orderBy("time", "desc")
         .onSnapshot(snap => {
             const container = document.getElementById("orders");
-            container.innerHTML = ""; // Clear current view
-
-            if (snap.empty) {
-                container.innerHTML = "<p>No orders found.</p>";
-                return;
-            }
+            container.innerHTML = "";
 
             snap.forEach(doc => {
                 let d = doc.data();
-                // Building the HTML string
+                let date = d.time ? new Date(d.time.seconds * 1000).toLocaleString('ar-EG') : 'وقت غير معروف';
+
                 container.innerHTML += `
                     <div class="box">
-                        <p><b>Name:</b> <span class="val">${d.name || 'N/A'}</span></p>
-                        <p><b>Phone:</b> <span class="val">${d.phone || 'N/A'}</span></p>
-                        <p><b>Product:</b> <span class="val">${d.product || 'N/A'}</span></p>
-                        <p><b>Notes:</b> <span class="val">${d.notes || 'None'}</span></p>
+                        <span class="status-badge">جديد</span>
+                        <span class="time-tag">${date}</span>
+                        <p><b>الاسم:</b> ${d.name || '---'}</p>
+                        <p><b>الهاتف:</b> <a href="tel:${d.phone}" style="color:lightblue; text-decoration:none;">${d.phone || '---'}</a></p>
+                        <p><b>المنتج:</b> ${d.product || '---'}</p>
+                        <p><b>ملاحظات:</b> ${d.notes || 'لا يوجد'}</p>
+                        <hr style="border:0; border-top:1px solid #333; margin:15px 0;">
+                        <button class="delete-btn" onclick="deleteOrder('${doc.id}')">حذف الطلب</button>
+                        <div style="clear:both;"></div>
                     </div>
                 `;
             });
-        }, err => {
-            console.error("Error fetching orders: ", err);
-            document.getElementById("orders").innerHTML = "Error loading data. Check console.";
         });
     }
 
